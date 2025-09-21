@@ -34,20 +34,7 @@ export default function Login() {
     }
   };
 
-  const handleDemoLogin = async (demoEmail: string) => {
-    setEmail(demoEmail);
-    setPassword('password');
-    setError('');
-    setLoading(true);
 
-    try {
-      await signIn(demoEmail, 'password');
-      router.push('/dashboard');
-    } catch (error: any) {
-      setError(error.message || 'Failed to sign in');
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -123,37 +110,6 @@ export default function Login() {
                 Create one
               </Link>
             </p>
-          </div>
-        </div>
-
-        {/* Demo Users */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">🎮 Try Demo Accounts</h3>
-          <div className="space-y-2">
-            <button
-              onClick={() => handleDemoLogin('alice@example.com')}
-              disabled={loading}
-              className="w-full text-left p-3 bg-gray-50 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
-            >
-              <div className="font-medium text-gray-900">Alice (100 ECO Coins)</div>
-              <div className="text-sm text-gray-600">alice@example.com</div>
-            </button>
-            <button
-              onClick={() => handleDemoLogin('bob@example.com')}
-              disabled={loading}
-              className="w-full text-left p-3 bg-gray-50 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
-            >
-              <div className="font-medium text-gray-900">Bob (100 ECO Coins)</div>
-              <div className="text-sm text-gray-600">bob@example.com</div>
-            </button>
-            <button
-              onClick={() => handleDemoLogin('charlie@example.com')}
-              disabled={loading}
-              className="w-full text-left p-3 bg-gray-50 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
-            >
-              <div className="font-medium text-gray-900">Charlie (100 ECO Coins)</div>
-              <div className="text-sm text-gray-600">charlie@example.com</div>
-            </button>
           </div>
         </div>
       </div>

@@ -87,31 +87,6 @@ export default function Home() {
             Sign In
           </Link>
         </div>
-
-        {/* Demo Users */}
-        <div className="mt-16 p-6 bg-white rounded-xl shadow-md">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">💡 Demo Users Available</h3>
-          <div className="grid sm:grid-cols-3 gap-4 text-sm">
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <p className="font-medium text-gray-900">Alice</p>
-              <p className="text-gray-600">alice@example.com</p>
-              <p className="text-xs text-gray-500">Password: password</p>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <p className="font-medium text-gray-900">Bob</p>
-              <p className="text-gray-600">bob@example.com</p>
-              <p className="text-xs text-gray-500">Password: password</p>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <p className="font-medium text-gray-900">Charlie</p>
-              <p className="text-gray-600">charlie@example.com</p>
-              <p className="text-xs text-gray-500">Password: password</p>
-            </div>
-          </div>
-          <p className="text-xs text-gray-500 mt-4">
-            You can use these demo accounts or create your own!
-          </p>
-        </div>
       </div>
     </div>
   );
