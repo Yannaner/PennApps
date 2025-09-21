@@ -7,6 +7,7 @@ import { HardwarePanel } from '@/components/HardwarePanel';
 import { ChainVisualization } from '@/components/ChainVisualization';
 import { CircuitBoardVisualization } from '@/components/CircuitBoardVisualization';
 import { Oscilloscope } from '@/components/Oscilloscope';
+import { AnalogMeter } from '@/components/AnalogMeter';
 import { 
   Block, 
   Transaction, 
@@ -282,6 +283,44 @@ export default function CryptoLabPage() {
 
           {/* Right Panel */}
           <div className="xl:col-span-1 space-y-8">
+            {/* Voltage Monitoring */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.25 }}
+              className="bg-gray-900 rounded-lg p-4 border border-blue-300"
+            >
+              <h4 className="text-white text-sm font-bold mb-4 text-center">
+                🔬 VOLTAGE MONITORING
+              </h4>
+              <div className="grid grid-cols-2 gap-4">
+                <AnalogMeter
+                  value={txRoot}
+                  label="Tx Root"
+                  color="#3b82f6"
+                  size="sm"
+                />
+                <AnalogMeter
+                  value={policy.center}
+                  label="Policy"
+                  color="#f59e0b"
+                  size="sm"
+                />
+                <AnalogMeter
+                  value={headBlock.digestV}
+                  label="Digest"
+                  color="#10b981"
+                  size="sm"
+                />
+                <AnalogMeter
+                  value={(hardwareState.connected || hardwareState.mockMode) ? 1 : 0}
+                  label="Hardware"
+                  color="#ef4444"
+                  size="sm"
+                />
+              </div>
+            </motion.div>
+
             {/* Hardware Panel */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
