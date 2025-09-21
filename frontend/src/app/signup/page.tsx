@@ -49,14 +49,14 @@ export default function SignUp() {
             <span className="text-white text-2xl font-bold">₿</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Join CryptoLab</h1>
-          <p className="text-gray-600">Create your account and get 100 free ECO Coins</p>
+          <p className="text-gray-800">Create your account and get 100 free ECO Coins</p>
         </div>
 
         {/* Signup Form */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="displayName" className="block text-sm font-medium text-gray-900 mb-2">
                 Display Name (Optional)
               </label>
               <input
@@ -64,13 +64,13 @@ export default function SignUp() {
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
                 placeholder="Enter your display name"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
                 Email Address
               </label>
               <input
@@ -78,14 +78,14 @@ export default function SignUp() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
                 placeholder="Enter your email"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
                 Password
               </label>
               <input
@@ -93,7 +93,7 @@ export default function SignUp() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
                 placeholder="Create a password (min 6 characters)"
                 required
                 minLength={6}
@@ -123,7 +123,7 @@ export default function SignUp() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-600">
+            <p className="text-gray-800">
               Already have an account?{' '}
               <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
                 Sign in

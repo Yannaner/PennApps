@@ -66,7 +66,7 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="toUserEmail" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="toUserEmail" className="block text-sm font-medium text-gray-900 mb-2">
             Recipient Email Address
           </label>
           <input
@@ -74,14 +74,14 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
             type="email"
             value={formData.toUserEmail}
             onChange={(e) => setFormData(prev => ({ ...prev, toUserEmail: e.target.value }))}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+            className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
             placeholder="Enter recipient's email"
             required
           />
         </div>
 
         <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="amount" className="block text-sm font-medium text-gray-900 mb-2">
             Amount (ECO Coins)
           </label>
           <div className="relative">
@@ -92,27 +92,27 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
               max={Math.min(currentUser.ecoCoins, 1000)}
               value={formData.amount || ''}
               onChange={(e) => setFormData(prev => ({ ...prev, amount: parseInt(e.target.value) || 0 }))}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
               placeholder="Enter amount"
               required
             />
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <span className="text-gray-500 text-sm">ECO</span>
+              <span className="text-gray-700 text-sm font-medium">ECO</span>
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-700 mt-1">
             Available: {currentUser.ecoCoins} ECO Coins
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm">
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-medium">
             {success}
           </div>
         )}
