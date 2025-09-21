@@ -4,13 +4,10 @@ import {
   addDoc, 
   updateDoc, 
   getDocs, 
-  getDoc, 
   query, 
   where, 
-  orderBy, 
   runTransaction,
-  onSnapshot,
-  Timestamp
+  onSnapshot
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { User, Transaction, TransactionRequest } from '@/types';

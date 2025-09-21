@@ -55,8 +55,8 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
         onTransactionSuccess();
       }, 1000);
 
-    } catch (error: any) {
-      setError(error.message || 'Transaction failed');
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Transaction failed');
     } finally {
       setLoading(false);
     }

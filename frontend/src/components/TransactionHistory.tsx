@@ -2,6 +2,7 @@
 
 import { Transaction } from '@/types';
 import { TransactionService } from '@/lib/transactions';
+import { VerificationStatus } from '@/lib/blockchain';
 import { useState, useEffect } from 'react';
 
 interface TransactionHistoryProps {
@@ -10,7 +11,7 @@ interface TransactionHistoryProps {
 }
 
 export default function TransactionHistory({ transactions, currentUserId }: TransactionHistoryProps) {
-  const [verificationStatuses, setVerificationStatuses] = useState<Record<string, any>>({});
+  const [verificationStatuses, setVerificationStatuses] = useState<Record<string, VerificationStatus & { transactionId: string }>>({});
 
   useEffect(() => {
     // Update verification statuses for verifying transactions
@@ -18,7 +19,7 @@ export default function TransactionHistory({ transactions, currentUserId }: Tran
     
     if (verifyingTransactions.length > 0) {
       const interval = setInterval(() => {
-        const newStatuses: Record<string, any> = {};
+        const newStatuses: Record<string, VerificationStatus & { transactionId: string }> = {};
         
         verifyingTransactions.forEach(transaction => {
           if (transaction.id) {
@@ -35,8 +36,6 @@ export default function TransactionHistory({ transactions, currentUserId }: Tran
   }, [transactions]);
 
   const getStatusBadge = (transaction: Transaction) => {
-    const isOutgoing = transaction.fromUserId === currentUserId;
-    
     switch (transaction.status) {
       case 'pending':
         return (
