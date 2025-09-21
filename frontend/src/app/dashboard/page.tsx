@@ -8,7 +8,6 @@ import { Transaction } from '@/types';
 import SendCoinsForm from '@/components/SendCoinsForm';
 import TransactionHistory from '@/components/TransactionHistory';
 import BlockchainEventsDisplay from '@/components/BlockchainEventsDisplay';
-import BlockchainStatus from '@/components/BlockchainStatus';
 import Image from 'next/image';
 
 export default function Dashboard() {
@@ -145,12 +144,6 @@ export default function Dashboard() {
         {/* Blockchain Events Display */}
         <div className="mb-8">
           <BlockchainEventsDisplay />
-        </div>
-
-        {/* Blockchain Status */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 shadow-2xl p-8 mb-8">
-          <h3 className="text-2xl font-bold text-blue-200 mb-6">Hardware Blockchain Status</h3>
-          <BlockchainStatus />
         </div>
 
         {/* Transaction History */}

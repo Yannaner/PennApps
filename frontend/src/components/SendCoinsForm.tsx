@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { TransactionService } from '@/lib/transactions';
 import { User, TransactionRequest } from '@/types';
+import { realBlockchainService } from '@/lib/realBlockchain';
 
 interface SendCoinsFormProps {
   currentUser: User;
@@ -38,6 +39,15 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
         setError('Insufficient balance. You cannot send more ECO Coins than you have.');
         setLoading(false);
         return;
+      }
+
+      // Start blockchain control automatically before sending transaction
+      try {
+        await realBlockchainService.controlBlockchain('start');
+        console.log('Blockchain started automatically');
+      } catch (error) {
+        console.warn('Could not start blockchain automatically:', error);
+        // Continue with transaction even if blockchain start fails
       }
 
       // Send transaction
