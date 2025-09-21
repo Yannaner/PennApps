@@ -66,7 +66,7 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="toUserEmail" className="block text-sm font-medium text-gray-900 mb-2">
+          <label htmlFor="toUserEmail" className="block text-sm font-medium text-white mb-2">
             Recipient Email Address
           </label>
           <input
@@ -74,14 +74,14 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
             type="email"
             value={formData.toUserEmail}
             onChange={(e) => setFormData(prev => ({ ...prev, toUserEmail: e.target.value }))}
-            className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
+            className="w-full px-4 py-3 bg-white border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all text-gray-900 placeholder-gray-500 shadow-sm"
             placeholder="Enter recipient's email"
             required
           />
         </div>
 
         <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-900 mb-2">
+          <label htmlFor="amount" className="block text-sm font-medium text-white mb-2">
             Amount (ECO Coins)
           </label>
           <div className="relative">
@@ -92,27 +92,27 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
               max={Math.min(currentUser.ecoCoins, 1000)}
               value={formData.amount || ''}
               onChange={(e) => setFormData(prev => ({ ...prev, amount: parseInt(e.target.value) || 0 }))}
-              className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
+              className="w-full px-4 py-3 bg-white border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all text-gray-900 placeholder-gray-500 shadow-sm"
               placeholder="Enter amount"
               required
             />
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <span className="text-gray-700 text-sm font-medium">ECO</span>
+              <span className="text-gray-600 text-sm font-medium">ECO</span>
             </div>
           </div>
-          <p className="text-xs text-gray-700 mt-1">
+          <p className="text-xs text-blue-200 mt-1">
             Available: {currentUser.ecoCoins} ECO Coins
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
+          <div className="bg-red-500/20 border border-red-400 text-red-200 px-4 py-3 rounded-lg text-sm font-medium backdrop-blur-sm">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-medium">
+          <div className="bg-green-500/20 border border-green-400 text-green-200 px-4 py-3 rounded-lg text-sm font-medium backdrop-blur-sm">
             {success}
           </div>
         )}
@@ -120,11 +120,11 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
         <button
           type="submit"
           disabled={loading || formData.amount <= 0 || !formData.toUserEmail}
-          className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-cyan-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-transparent border-2 border-amber-400 text-amber-300 py-3 px-4 rounded-xl font-bold hover:bg-amber-400/10 hover:border-amber-300 hover:text-amber-200 focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm"
         >
           {loading ? (
             <div className="flex items-center justify-center">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+              <div className="w-5 h-5 border-2 border-amber-300 border-t-transparent rounded-full animate-spin mr-2"></div>
               Sending ECO Coins...
             </div>
           ) : (

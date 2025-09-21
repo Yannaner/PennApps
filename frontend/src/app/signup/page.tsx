@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -41,22 +42,31 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <span className="text-white text-2xl font-bold">₿</span>
+          <div className="relative w-20 h-20 mx-auto mb-6">
+            <Image
+              src="/cryptolab.png"
+              alt="CryptoLab Logo"
+              width={80}
+              height={80}
+              className="w-full h-full object-contain drop-shadow-lg"
+            />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Join CryptoLab</h1>
-          <p className="text-gray-800">Create your account and get 100 free ECO Coins</p>
+          <h1 className="text-4xl font-bold mb-3">
+            <span className="bg-gradient-to-r from-blue-300 to-blue-400 bg-clip-text text-transparent">Join </span>
+            <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-clip-text text-transparent">CryptoLab</span>
+          </h1>
+          <p className="text-blue-200">Create your account and get 100 free ECO Coins</p>
         </div>
 
         {/* Signup Form */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 shadow-2xl p-8 mb-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="displayName" className="block text-sm font-medium text-gray-900 mb-2">
+              <label htmlFor="displayName" className="block text-sm font-medium text-blue-200 mb-2">
                 Display Name (Optional)
               </label>
               <input
@@ -64,13 +74,13 @@ export default function SignUp() {
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
+                className="w-full px-4 py-3 bg-white/10 border border-blue-300/30 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-white placeholder-blue-300/70 backdrop-blur-sm"
                 placeholder="Enter your display name"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-blue-200 mb-2">
                 Email Address
               </label>
               <input
@@ -78,14 +88,14 @@ export default function SignUp() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
+                className="w-full px-4 py-3 bg-white/10 border border-blue-300/30 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-white placeholder-blue-300/70 backdrop-blur-sm"
                 placeholder="Enter your email"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-blue-200 mb-2">
                 Password
               </label>
               <input
@@ -93,7 +103,7 @@ export default function SignUp() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-600"
+                className="w-full px-4 py-3 bg-white/10 border border-blue-300/30 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-white placeholder-blue-300/70 backdrop-blur-sm"
                 placeholder="Create a password (min 6 characters)"
                 required
                 minLength={6}
@@ -101,7 +111,7 @@ export default function SignUp() {
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-500/20 border border-red-400/30 text-red-200 px-4 py-3 rounded-xl text-sm backdrop-blur-sm">
                 {error}
               </div>
             )}
@@ -109,23 +119,23 @@ export default function SignUp() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-transparent border-2 border-amber-400 text-amber-300 py-3 px-4 rounded-xl font-bold hover:bg-amber-400/10 hover:border-amber-300 hover:text-amber-200 focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm"
             >
               {loading ? (
                 <div className="flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  <div className="w-5 h-5 border-2 border-amber-300 border-t-transparent rounded-full animate-spin mr-2"></div>
                   Creating Account...
                 </div>
               ) : (
-                'Create Account & Get 100 ECO Coins'
+                'Sign up'
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-800">
+            <p className="text-blue-200">
               Already have an account?{' '}
-              <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+              <Link href="/login" className="text-amber-300 hover:text-amber-200 font-medium transition-colors">
                 Sign in
               </Link>
             </p>
@@ -133,10 +143,10 @@ export default function SignUp() {
         </div>
 
         {/* Welcome Bonus */}
-        <div className="bg-gradient-to-r from-green-400 to-blue-500 rounded-xl shadow-lg p-6 text-white text-center">
-          <div className="text-3xl mb-2">🎉</div>
-          <h3 className="text-lg font-semibold mb-2">Welcome Bonus</h3>
-          <p className="text-green-100">
+        <div className="bg-gradient-to-r from-amber-500/20 to-blue-500/20 backdrop-blur-lg rounded-2xl border border-amber-300/20 shadow-xl p-6 text-center">
+          <div className="text-3xl mb-3">🎉</div>
+          <h3 className="text-lg font-bold text-amber-300 mb-2">Welcome Bonus</h3>
+          <p className="text-blue-200 text-sm leading-relaxed">
             Get 100 ECO Coins instantly when you create your account! Start sending and receiving digital currency right away.
           </p>
         </div>

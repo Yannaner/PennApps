@@ -7,6 +7,7 @@ import { subscribeToUserTransactions } from '@/lib/database';
 import { Transaction } from '@/types';
 import SendCoinsForm from '@/components/SendCoinsForm';
 import TransactionHistory from '@/components/TransactionHistory';
+import Image from 'next/image';
 
 export default function Dashboard() {
   const { user, loading, signOut, refreshUserData } = useAuth();
@@ -52,10 +53,10 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-blue-600 font-medium">Loading Dashboard...</span>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+          <span className="text-blue-200 font-medium text-lg">Loading Dashboard...</span>
         </div>
       </div>
     );
@@ -66,17 +67,26 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-black/20 backdrop-blur-lg border-b border-white/10 shadow-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="flex items-center">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center mr-3">
-                  <span className="text-white text-lg font-bold">₿</span>
+                <div className="relative w-10 h-10 mr-3">
+                  <Image
+                    src="/cryptolab.png"
+                    alt="CryptoLab Logo"
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
-                <h1 className="text-xl font-bold text-gray-900">CryptoLab</h1>
+                <h1 className="text-xl font-bold">
+                  <span className="bg-gradient-to-r from-blue-300 to-blue-400 bg-clip-text text-transparent">Crypto</span>
+                  <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-clip-text text-transparent">Lab</span>
+                </h1>
               </div>
             </div>
             
@@ -84,7 +94,7 @@ export default function Dashboard() {
               <button
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-800 hover:text-blue-600 transition-colors"
+                className="flex items-center px-4 py-2 text-sm font-medium text-blue-200 hover:text-amber-300 transition-colors bg-white/5 rounded-lg border border-white/10 hover:bg-white/10"
               >
                 <div className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`}>
                   🔄
@@ -92,13 +102,13 @@ export default function Dashboard() {
                 Refresh
               </button>
               
-              <div className="text-sm text-gray-800 font-medium">
+              <div className="text-sm text-blue-200 font-medium bg-white/5 px-3 py-2 rounded-lg border border-white/10">
                 {user.displayName || user.email}
               </div>
               
               <button
                 onClick={handleSignOut}
-                className="px-4 py-2 text-sm font-medium text-gray-800 hover:text-red-600 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-blue-200 hover:text-red-400 transition-colors bg-white/5 rounded-lg border border-white/10 hover:bg-red-500/10"
               >
                 Sign Out
               </button>
@@ -109,21 +119,21 @@ export default function Dashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Balance Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 shadow-2xl p-8 mb-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Your ECO Coin Balance</h2>
-            <div className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-4">
+            <h2 className="text-3xl font-bold text-blue-200 mb-2">Your ECO Coin Balance</h2>
+            <div className="text-6xl font-bold bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 bg-clip-text text-transparent mb-4">
               {user.ecoCoins} ECO
             </div>
-            <p className="text-gray-800">
+            <p className="text-blue-300">
               Digital currency verified by physical blockchain technology
             </p>
           </div>
         </div>
 
         {/* Send Coins Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6">Send ECO Coins</h3>
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 shadow-2xl p-8 mb-8">
+          <h3 className="text-2xl font-bold text-blue-200 mb-6">Send ECO Coins</h3>
           <SendCoinsForm 
             currentUser={user}
             onTransactionSuccess={handleRefresh}
@@ -131,8 +141,8 @@ export default function Dashboard() {
         </div>
 
         {/* Transaction History */}
-        <div className="mt-8 bg-white rounded-2xl shadow-lg p-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6">Transaction History</h3>
+        <div className="mt-8 bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 shadow-2xl p-8">
+          <h3 className="text-2xl font-bold text-blue-200 mb-6">Transaction History</h3>
           <TransactionHistory 
             transactions={transactions}
             currentUserId={user.uid}
