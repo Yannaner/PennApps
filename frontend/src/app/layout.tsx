@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CryptoLab - ECO Coin Blockchain",
+  title: "CryptoLab",
   description: "Physical blockchain verification system for ECO Coin transactions",
 };
 

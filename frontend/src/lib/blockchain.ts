@@ -8,7 +8,7 @@ interface BlockchainVerificationJob {
 
 class BlockchainVerificationService {
   private verificationJobs: Map<string, BlockchainVerificationJob> = new Map();
-  private readonly VERIFICATION_DELAY = 30000; // 30 seconds in milliseconds
+  private readonly VERIFICATION_DELAY = 30000; // Physical verification delay in milliseconds
 
   /**
    * Initiates blockchain verification process with physical hardware simulation

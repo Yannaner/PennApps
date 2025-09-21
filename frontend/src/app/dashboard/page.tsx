@@ -8,8 +8,6 @@ import { Transaction } from '@/types';
 import { TransactionService } from '@/lib/transactions';
 import SendCoinsForm from '@/components/SendCoinsForm';
 import TransactionHistory from '@/components/TransactionHistory';
-import BlockchainStatus from '@/components/BlockchainStatus';
-import FirestoreDebug from '@/components/FirestoreDebug';
 
 export default function Dashboard() {
   const { user, loading, signOut, refreshUserData } = useAuth();
@@ -124,21 +122,13 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Send Coins Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Send ECO Coins</h3>
-            <SendCoinsForm 
-              currentUser={user}
-              onTransactionSuccess={handleRefresh}
-            />
-          </div>
-
-          {/* Blockchain Status */}
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Blockchain Network</h3>
-            <BlockchainStatus />
-          </div>
+        {/* Send Coins Section */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">Send ECO Coins</h3>
+          <SendCoinsForm 
+            currentUser={user}
+            onTransactionSuccess={handleRefresh}
+          />
         </div>
 
         {/* Transaction History */}
@@ -148,11 +138,6 @@ export default function Dashboard() {
             transactions={transactions}
             currentUserId={user.uid}
           />
-        </div>
-
-        {/* Debug Panel */}
-        <div className="mt-8">
-          <FirestoreDebug />
         </div>
       </div>
     </div>

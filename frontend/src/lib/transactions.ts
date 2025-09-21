@@ -50,7 +50,7 @@ export class TransactionService {
       await processTransaction(transactionId);
 
       // Step 3: Initiate blockchain verification with hardware signal
-      // This runs asynchronously and will complete the transaction after 30 seconds
+      // This runs asynchronously and will complete the transaction after verification
       blockchainVerificationService.initiateVerification(transactionId)
         .then(() => {
           console.log(`Transaction ${transactionId} completed successfully after blockchain verification`);
@@ -61,7 +61,7 @@ export class TransactionService {
 
       return {
         transactionId,
-        message: `Transaction initiated! Your ${transactionRequest.amount} ECO Coins have been sent to ${transactionRequest.toUserEmail}. The transaction is now being verified by our physical blockchain network and will be completed in 30 seconds.`
+        message: `Transaction initiated! Your ${transactionRequest.amount} ECO Coins have been sent to ${transactionRequest.toUserEmail}. The transaction is now being verified by our physical blockchain network.`
       };
 
     } catch (error) {

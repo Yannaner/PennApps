@@ -68,7 +68,7 @@ export default function Home() {
               <span className="text-purple-600 text-2xl">🔒</span>
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Secure Transfers</h3>
-            <p className="text-gray-800 text-sm">30-second verification ensures transaction security</p>
+            <p className="text-gray-800 text-sm">Secure verification ensures transaction security</p>
           </div>
         </div>
 

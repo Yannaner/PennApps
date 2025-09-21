@@ -191,16 +191,20 @@ export const completeTransaction = async (transactionId: string): Promise<void> 
 
 export const getUserTransactions = async (userId: string): Promise<Transaction[]> => {
   try {
+    console.log(`🔍 Loading transactions for user: ${userId}`);
+    
     const transactionsRef = collection(db, 'transactions');
+    
+    // Query for sent transactions (without orderBy to avoid index requirement)
     const q1 = query(
       transactionsRef, 
-      where('fromUserId', '==', userId),
-      orderBy('createdAt', 'desc')
+      where('fromUserId', '==', userId)
     );
+    
+    // Query for received transactions
     const q2 = query(
       transactionsRef, 
-      where('toUserId', '==', userId),
-      orderBy('createdAt', 'desc')
+      where('toUserId', '==', userId)
     );
     
     const [sentSnapshot, receivedSnapshot] = await Promise.all([
@@ -242,8 +246,11 @@ export const getUserTransactions = async (userId: string): Promise<Transaction[]
       });
     });
     
-    // Sort by creation date
-    return transactions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    // Sort by creation date (most recent first)
+    const sortedTransactions = transactions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    
+    console.log(`✅ Found ${sortedTransactions.length} transactions for user`);
+    return sortedTransactions;
   } catch (error) {
     console.error('Error getting user transactions:', error);
     // Return empty array instead of throwing
@@ -257,16 +264,18 @@ export const subscribeToUserTransactions = (
   callback: (transactions: Transaction[]) => void
 ) => {
   try {
+    console.log(`🔔 Setting up real-time listener for user: ${userId}`);
+    
     const transactionsRef = collection(db, 'transactions');
+    
+    // Remove orderBy to avoid index requirements
     const q1 = query(
       transactionsRef, 
-      where('fromUserId', '==', userId),
-      orderBy('createdAt', 'desc')
+      where('fromUserId', '==', userId)
     );
     const q2 = query(
       transactionsRef, 
-      where('toUserId', '==', userId),
-      orderBy('createdAt', 'desc')
+      where('toUserId', '==', userId)
     );
     
     let sentTransactions: Transaction[] = [];
@@ -275,6 +284,7 @@ export const subscribeToUserTransactions = (
     const updateCallback = () => {
       const allTransactions = [...sentTransactions, ...receivedTransactions]
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      console.log(`📊 Updated transactions: ${allTransactions.length} total`);
       callback(allTransactions);
     };
     
@@ -326,13 +336,14 @@ export const subscribeToUserTransactions = (
       updateCallback();
     });
     
+    // Return combined unsubscribe function
     return () => {
       unsubscribe1();
       unsubscribe2();
     };
   } catch (error) {
-    console.error('Error setting up transaction listeners:', error);
-    // Return a no-op unsubscribe function
+    console.error('Error setting up transaction listener:', error);
+    // Return no-op unsubscribe function
     return () => {};
   }
 };

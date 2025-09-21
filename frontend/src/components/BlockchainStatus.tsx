@@ -151,7 +151,7 @@ export default function BlockchainStatus() {
         </div>
         <div className="text-center p-3 bg-gray-50 rounded-lg">
           <div className="font-medium text-gray-900">Verification Time</div>
-          <div className="text-gray-600">30 seconds</div>
+          <div className="text-gray-600">Variable</div>
         </div>
       </div>
 

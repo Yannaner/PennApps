@@ -132,16 +132,6 @@ export default function SendCoinsForm({ currentUser, onTransactionSuccess }: Sen
           )}
         </button>
       </form>
-
-      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <h4 className="text-sm font-medium text-blue-800 mb-2">🔗 Blockchain Verification Process</h4>
-        <ul className="text-sm text-blue-700 space-y-1">
-          <li>• Your transaction will be processed immediately</li>
-          <li>• Physical blockchain hardware will verify the transaction</li>
-          <li>• Verification takes 30 seconds with flashing lights</li>
-          <li>• Transaction completes once blockchain consensus is reached</li>
-        </ul>
-      </div>
     </div>
   );
 }
