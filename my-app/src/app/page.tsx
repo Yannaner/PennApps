@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { ControlPanel } from '@/components/ControlPanel';
 import { HardwarePanel } from '@/components/HardwarePanel';
 import { ChainVisualization } from '@/components/ChainVisualization';
+import { CircuitBoardVisualization } from '@/components/CircuitBoardVisualization';
+import { Oscilloscope } from '@/components/Oscilloscope';
 import { 
   Block, 
   Transaction, 
@@ -203,10 +205,10 @@ export default function CryptoLabPage() {
         </motion.div>
 
         {/* Main Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
           {/* Control Panel */}
           <motion.div
-            className="lg:col-span-1"
+            className="xl:col-span-1"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
@@ -226,13 +228,65 @@ export default function CryptoLabPage() {
             />
           </motion.div>
 
+          {/* Center Panel - Circuit Visualization */}
+          <motion.div
+            className="xl:col-span-2 space-y-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            {/* Circuit Board Visualization */}
+            <CircuitBoardVisualization
+              voltage={{
+                txA: transactions[0].enabled ? transactions[0].value : 0,
+                txB: transactions[1].enabled ? transactions[1].value : 0,
+                txC: transactions[2].enabled ? transactions[2].value : 0,
+                txRoot,
+                policyCenter: policy.center,
+                policyWidth: policy.width,
+                digest: headBlock.digestV
+              }}
+              hardwareActive={hardwareState.connected || hardwareState.mockMode}
+            />
+
+            {/* Oscilloscope */}
+            <Oscilloscope
+              signals={[
+                {
+                  name: 'Tx Root',
+                  voltage: txRoot * 3.3,
+                  color: '#3b82f6',
+                  visible: true
+                },
+                {
+                  name: 'Policy Center',
+                  voltage: policy.center * 3.3,
+                  color: '#f59e0b',
+                  visible: true
+                },
+                {
+                  name: 'Digest',
+                  voltage: headBlock.digestV * 3.3,
+                  color: '#10b981',
+                  visible: true
+                },
+                {
+                  name: 'Hardware',
+                  voltage: (hardwareState.connected || hardwareState.mockMode) ? 3.3 : 0,
+                  color: '#ef4444',
+                  visible: true
+                }
+              ]}
+            />
+          </motion.div>
+
           {/* Right Panel */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="xl:col-span-1 space-y-8">
             {/* Hardware Panel */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.3 }}
             >
               <HardwarePanel
                 hardwareState={hardwareState}
@@ -240,20 +294,21 @@ export default function CryptoLabPage() {
                 onShowToast={showToast}
               />
             </motion.div>
-
-            {/* Chain Visualization */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <ChainVisualization
-                blocks={blocks}
-                onTamperBlock={handleTamperBlock}
-              />
-            </motion.div>
           </div>
         </div>
+
+        {/* Chain Visualization - Full Width */}
+        <motion.div
+          className="mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <ChainVisualization
+            blocks={blocks}
+            onTamperBlock={handleTamperBlock}
+          />
+        </motion.div>
 
         {/* Footer */}
         <motion.div 
