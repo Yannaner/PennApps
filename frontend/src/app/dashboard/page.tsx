@@ -5,7 +5,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { subscribeToUserTransactions } from '@/lib/database';
 import { Transaction } from '@/types';
-import { TransactionService } from '@/lib/transactions';
 import SendCoinsForm from '@/components/SendCoinsForm';
 import TransactionHistory from '@/components/TransactionHistory';
 

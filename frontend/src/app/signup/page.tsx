@@ -33,8 +33,8 @@ export default function SignUp() {
     try {
       await signUp(email, password, displayName);
       router.push('/dashboard');
-    } catch (error: any) {
-      setError(error.message || 'Failed to create account');
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Failed to create account');
     } finally {
       setLoading(false);
     }

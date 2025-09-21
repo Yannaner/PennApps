@@ -5,8 +5,18 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
 
+interface UserDoc {
+  id: string;
+  data: Record<string, unknown>;
+}
+
+type DebugInfo = 
+  | { type: 'all_users'; users: UserDoc[]; totalUsers: number }
+  | { type: 'email_search'; searchEmail: string; users: UserDoc[]; found: boolean }
+  | { type: 'error'; error: string };
+
 export default function FirestoreDebug() {
-  const [debugInfo, setDebugInfo] = useState<any>(null);
+  const [debugInfo, setDebugInfo] = useState<DebugInfo | null>(null);
   const [testEmail, setTestEmail] = useState('');
   const { user } = useAuth();
 

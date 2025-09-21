@@ -27,8 +27,8 @@ export default function Login() {
     try {
       await signIn(email, password);
       router.push('/dashboard');
-    } catch (error: any) {
-      setError(error.message || 'Failed to sign in');
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Failed to sign in');
     } finally {
       setLoading(false);
     }
@@ -105,7 +105,7 @@ export default function Login() {
 
           <div className="mt-6 text-center">
             <p className="text-gray-800">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
                 Create one
               </Link>
