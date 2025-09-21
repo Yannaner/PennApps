@@ -19,11 +19,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 
-# Configuration
-PORTS = ["/dev/tty.usbmodem14101", "/dev/tty.usbmodem14201"]  # Update these to match your Arduino ports
+PORTS = ["/dev/tty.usbmodem14101", "/dev/tty.usbmodem14201"]
 BAUD = 115200
 DURATION_MS = 1200
-THRESH = 0.60
+THRESH = 0.60  # correlation threshold
 ROUND_PAUSE = 3.0
 TXS_PER_BLOCK = 5
 
@@ -159,7 +158,6 @@ async def run_round():
     state.round += 1
     state.leader = state.round % 2
 
-    # Send challenge
     seed = int(time.time() * 1000) % 100000
     chal_msg = f"CHAL round={state.round} seed={seed} leader={state.leader} dur={DURATION_MS}"
     broadcast_to_nodes(chal_msg)
@@ -172,7 +170,6 @@ async def run_round():
         "durMs": DURATION_MS
     })
 
-    # Wait for witness
     start_time = time.time()
     witness_received = False
 
@@ -212,7 +209,6 @@ async def run_round():
             break
         await asyncio.sleep(0.1)
 
-    # Handle commit or skip
     if witness_received:
         state.consecutive_skips = 0
 
@@ -288,18 +284,14 @@ async def consensus_loop():
         else:
             await asyncio.sleep(0.5)
 
-# Lifespan management
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
     init_serial()
     loop_task = asyncio.create_task(consensus_loop())
     yield
-    # Shutdown
     loop_task.cancel()
     close_serial()
 
-# FastAPI app
 app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
@@ -315,7 +307,6 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     connected_websockets.add(websocket)
 
-    # Send initial state
     await websocket.send_text(json.dumps({
         "type": "state",
         "round": state.round,
@@ -329,7 +320,6 @@ async def websocket_endpoint(websocket: WebSocket):
 
     try:
         while True:
-            # Keep connection alive
             await websocket.receive_text()
     except WebSocketDisconnect:
         connected_websockets.remove(websocket)
