@@ -1,62 +1,65 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { TransactionService } from '@/lib/transactions';
-import { NetworkStatus } from '@/lib/blockchain';
+import { realBlockchainService, BlockchainState } from '@/lib/realBlockchain';
 
 export default function BlockchainStatus() {
-  const [networkStatus, setNetworkStatus] = useState<NetworkStatus | null>(null);
-  const [activeVerifications, setActiveVerifications] = useState<string[]>([]);
+  const [blockchainState, setBlockchainState] = useState<BlockchainState | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Update network status and active verifications
-    const updateStatus = () => {
-      const status = TransactionService.getNetworkStatus();
-      const verifications = TransactionService.getActiveVerifications();
-      
-      setNetworkStatus(status);
-      setActiveVerifications(verifications);
+    const fetchInitialState = async () => {
+      try {
+        const state = await realBlockchainService.getState();
+        setBlockchainState(state);
+      } catch (error) {
+        console.error('Failed to fetch initial blockchain state:', error);
+      }
     };
 
-    // Initial update
-    updateStatus();
+    fetchInitialState();
+    setIsConnected(realBlockchainService.isConnected());
 
-    // Update every 2 seconds
-    const interval = setInterval(updateStatus, 2000);
-    return () => clearInterval(interval);
+    const handleStateUpdate = (event: any) => {
+      if (event.type === 'state') {
+        setBlockchainState({
+          round: event.round || 0,
+          leader: event.leader || 0,
+          blockHeight: event.blockHeight || 0,
+          balances: event.balances || {},
+          mempool: event.mempool || [],
+          ports: event.ports || [],
+          threshold: event.threshold || 0.6
+        });
+      }
+    };
+
+    const handleConnectionUpdate = () => {
+      setIsConnected(realBlockchainService.isConnected());
+    };
+
+    realBlockchainService.addEventListener('state', handleStateUpdate);
+    realBlockchainService.addEventListener('connection', handleConnectionUpdate);
+
+    const connectionInterval = setInterval(handleConnectionUpdate, 2000);
+
+    return () => {
+      realBlockchainService.removeEventListener('state', handleStateUpdate);
+      realBlockchainService.removeEventListener('connection', handleConnectionUpdate);
+      clearInterval(connectionInterval);
+    };
   }, []);
 
-  const getHealthColor = (health: string) => {
-    switch (health) {
-      case 'excellent':
-        return 'text-green-600 bg-green-100';
-      case 'good':
-        return 'text-blue-600 bg-blue-100';
-      case 'poor':
-        return 'text-yellow-600 bg-yellow-100';
-      case 'offline':
-        return 'text-red-600 bg-red-100';
-      default:
-        return 'text-gray-600 bg-gray-100';
+  const handleControlAction = async (action: 'start' | 'stop' | 'reset') => {
+    try {
+      await realBlockchainService.controlBlockchain(action);
+      console.log(`Blockchain ${action} command sent`);
+    } catch (error) {
+      console.error(`Failed to ${action} blockchain:`, error);
     }
   };
 
-  const getHealthIcon = (health: string) => {
-    switch (health) {
-      case 'excellent':
-        return '🟢';
-      case 'good':
-        return '🔵';
-      case 'poor':
-        return '🟡';
-      case 'offline':
-        return '🔴';
-      default:
-        return '⚪';
-    }
-  };
-
-  if (!networkStatus) {
+  if (!blockchainState) {
     return (
       <div className="animate-pulse">
         <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
@@ -67,102 +70,95 @@ export default function BlockchainStatus() {
 
   return (
     <div className="space-y-6">
-      {/* Network Health */}
       <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center">
-          <span className="text-2xl mr-3">{getHealthIcon(networkStatus.networkHealth)}</span>
+          <span className="text-2xl mr-3">{isConnected ? '🟢' : '🔴'}</span>
           <div>
             <h4 className="font-medium text-gray-900">Network Status</h4>
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getHealthColor(networkStatus.networkHealth)}`}>
-              {networkStatus.networkHealth.toUpperCase()}
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              isConnected ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'
+            }`}>
+              {isConnected ? 'CONNECTED' : 'DISCONNECTED'}
             </span>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-sm text-gray-600">Nodes Online</div>
+          <div className="text-sm text-gray-600">Block Height</div>
           <div className="text-lg font-bold text-gray-900">
-            {networkStatus.nodesOnline}/{networkStatus.totalNodes}
+            {blockchainState.blockHeight}
           </div>
         </div>
       </div>
 
-      {/* Physical Nodes Visualization */}
-      <div>
-        <h4 className="font-medium text-gray-900 mb-3">Physical Blockchain Nodes</h4>
-        <div className="grid grid-cols-5 gap-3">
-          {Array.from({ length: networkStatus.totalNodes }, (_, i) => {
-            const isOnline = i < networkStatus.nodesOnline;
-            const isActive = activeVerifications.length > 0 && isOnline;
-            
-            return (
-              <div
-                key={i}
-                className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all duration-500 ${
-                  isActive 
-                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 animate-pulse shadow-lg' 
-                    : isOnline
-                    ? 'bg-green-500'
-                    : 'bg-gray-300'
-                }`}
-              >
-                {i + 1}
-              </div>
-            );
-          })}
+      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h4 className="font-medium text-blue-900 mb-3">Blockchain Controls</h4>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => handleControlAction('start')}
+            className="px-3 py-1 text-sm font-medium text-green-700 bg-green-100 rounded hover:bg-green-200 transition-colors"
+          >
+            Start
+          </button>
+          <button
+            onClick={() => handleControlAction('stop')}
+            className="px-3 py-1 text-sm font-medium text-red-700 bg-red-100 rounded hover:bg-red-200 transition-colors"
+          >
+            Stop
+          </button>
+          <button
+            onClick={() => handleControlAction('reset')}
+            className="px-3 py-1 text-sm font-medium text-yellow-700 bg-yellow-100 rounded hover:bg-yellow-200 transition-colors"
+          >
+            Reset
+          </button>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          {activeVerifications.length > 0 
-            ? `${activeVerifications.length} transaction(s) being verified - nodes are flashing!`
-            : 'Nodes ready for transaction verification'
-          }
-        </p>
       </div>
 
-      {/* Active Verifications */}
-      {activeVerifications.length > 0 && (
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="p-4 bg-gray-50 rounded-lg">
+          <div className="text-sm text-gray-600">Current Round</div>
+          <div className="text-xl font-bold text-gray-900">{blockchainState.round}</div>
+        </div>
+        <div className="p-4 bg-gray-50 rounded-lg">
+          <div className="text-sm text-gray-600">Current Leader</div>
+          <div className="text-xl font-bold text-gray-900">Node {blockchainState.leader}</div>
+        </div>
+      </div>
+
+      {blockchainState.mempool.length > 0 && (
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
           <div className="flex items-center mb-2">
-            <span className="animate-spin mr-2">⚡</span>
-            <h4 className="font-medium text-blue-900">Active Blockchain Verifications</h4>
+            <span className="animate-pulse mr-2">⏳</span>
+            <h4 className="font-medium text-amber-900">Pending Transactions</h4>
           </div>
-          <p className="text-sm text-blue-700">
-            {activeVerifications.length} transaction{activeVerifications.length !== 1 ? 's' : ''} currently being verified by the physical blockchain network.
+          <p className="text-sm text-amber-700 mb-2">
+            {blockchainState.mempool.length} transaction{blockchainState.mempool.length !== 1 ? 's' : ''} waiting for consensus.
           </p>
-          <div className="mt-2 flex flex-wrap gap-1">
-            {activeVerifications.map((transactionId, index) => (
-              <span
-                key={transactionId}
-                className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800"
-              >
-                TX#{index + 1}
-              </span>
+          <div className="space-y-1">
+            {blockchainState.mempool.slice(0, 3).map((tx, index) => (
+              <div key={index} className="text-xs text-amber-800 bg-amber-100 p-2 rounded">
+                {tx.from_addr || 'System'} → {tx.to}: {tx.amt} ECO
+              </div>
             ))}
+            {blockchainState.mempool.length > 3 && (
+              <div className="text-xs text-amber-700">
+                +{blockchainState.mempool.length - 3} more transactions...
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Network Info */}
-      <div className="grid grid-cols-2 gap-4 text-sm">
-        <div className="text-center p-3 bg-gray-50 rounded-lg">
-          <div className="font-medium text-gray-900">Last Heartbeat</div>
-          <div className="text-gray-600">
-            {networkStatus.lastHeartbeat.toLocaleTimeString()}
-          </div>
+      <div className="p-4 bg-gray-50 rounded-lg">
+        <h4 className="font-medium text-gray-900 mb-3">Blockchain Balances</h4>
+        <div className="space-y-2">
+          {Object.entries(blockchainState.balances).map(([address, balance]) => (
+            <div key={address} className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">{address}</span>
+              <span className="font-medium text-gray-900">{balance} ECO</span>
+            </div>
+          ))}
         </div>
-        <div className="text-center p-3 bg-gray-50 rounded-lg">
-          <div className="font-medium text-gray-900">Verification Time</div>
-          <div className="text-gray-600">Variable</div>
-        </div>
-      </div>
-
-      {/* Hardware Description */}
-      <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg">
-        <h4 className="font-medium text-purple-900 mb-2">🔧 Physical Blockchain Hardware</h4>
-        <p className="text-sm text-purple-700">
-          Our unique physical blockchain consists of {networkStatus.totalNodes} hardware nodes with LED indicators. 
-          When you send ECO Coins, the nodes light up and flash in sequence to visualize the 
-          consensus verification process in real-time!
-        </p>
       </div>
     </div>
   );

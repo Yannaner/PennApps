@@ -1,5 +1,5 @@
-import { createTransaction, processTransaction, getUserByEmail } from './database';
-import { blockchainVerificationService } from './blockchain';
+import { createTransaction, processTransaction, getUserByEmail, completeTransaction } from './database';
+import { realBlockchainService } from './realBlockchain';
 import { TransactionRequest } from '@/types';
 
 export class TransactionService {
@@ -49,15 +49,34 @@ export class TransactionService {
       // Step 2: Process transaction (deduct from sender, add to recipient, set to verifying)
       await processTransaction(transactionId);
 
-      // Step 3: Initiate blockchain verification with hardware signal
-      // This runs asynchronously and will complete the transaction after verification
-      blockchainVerificationService.initiateVerification(transactionId)
-        .then(() => {
-          console.log(`Transaction ${transactionId} completed successfully after blockchain verification`);
-        })
-        .catch((error) => {
-          console.error(`Transaction ${transactionId} verification failed:`, error);
-        });
+      // Step 3: Send transaction to the real blockchain backend
+      try {
+        const fromAddress = realBlockchainService.getBlockchainAddress(fromUserEmail);
+        const toAddress = realBlockchainService.getBlockchainAddress(transactionRequest.toUserEmail);
+        
+        await realBlockchainService.sendTransaction(
+          fromAddress,
+          toAddress,
+          transactionRequest.amount
+        );
+
+        console.log(`Transaction ${transactionId} sent to blockchain backend`);
+        
+        // Complete the transaction immediately since blockchain handles verification
+        // In a more sophisticated setup, you might wait for blockchain confirmation
+        setTimeout(async () => {
+          try {
+            await completeTransaction(transactionId);
+            console.log(`Transaction ${transactionId} completed successfully`);
+          } catch (error: any) {
+            console.error(`Transaction ${transactionId} completion failed:`, error);
+          }
+        }, 1000);
+
+      } catch (error: any) {
+        console.error(`Failed to send transaction ${transactionId} to blockchain:`, error);
+        throw new Error('Failed to send transaction to blockchain network');
+      }
 
       return {
         transactionId,
@@ -74,10 +93,14 @@ export class TransactionService {
    * Gets the status of a transaction including blockchain verification progress
    */
   public static getTransactionStatus(transactionId: string) {
-    const verificationStatus = blockchainVerificationService.getVerificationStatus(transactionId);
+    // For the real blockchain, we can check if the transaction is in mempool
+    const currentState = realBlockchainService.getCurrentState();
+    
     return {
-      ...verificationStatus,
-      transactionId
+      transactionId,
+      isVerifying: currentState ? currentState.mempool.length > 0 : false,
+      blockHeight: currentState?.blockHeight || 0,
+      networkConnected: realBlockchainService.isConnected()
     };
   }
 
@@ -85,14 +108,24 @@ export class TransactionService {
    * Gets the status of the hardware blockchain network
    */
   public static getNetworkStatus() {
-    return blockchainVerificationService.getHardwareNetworkStatus();
+    const currentState = realBlockchainService.getCurrentState();
+    
+    return {
+      isConnected: realBlockchainService.isConnected(),
+      blockHeight: currentState?.blockHeight || 0,
+      round: currentState?.round || 0,
+      leader: currentState?.leader || 0,
+      mempoolSize: currentState?.mempool.length || 0,
+      threshold: currentState?.threshold || 0.6
+    };
   }
 
   /**
-   * Gets all active verifications
+   * Gets all transactions in mempool
    */
   public static getActiveVerifications() {
-    return blockchainVerificationService.getActiveVerifications();
+    const currentState = realBlockchainService.getCurrentState();
+    return currentState?.mempool || [];
   }
 
   /**
