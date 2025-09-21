@@ -18,13 +18,24 @@ import { User, Transaction, TransactionRequest } from '@/types';
 // User operations
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   try {
+    console.log(`🔍 Searching for user with email: "${email}"`);
+    
     const usersRef = collection(db, 'users');
     const q = query(usersRef, where('email', '==', email));
     const querySnapshot = await getDocs(q);
     
+    console.log(`📊 Query returned ${querySnapshot.docs.length} documents`);
+    
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
+      
+      console.log(`✅ Found user:`, {
+        uid: userDoc.id,
+        email: userData.email,
+        displayName: userData.displayName
+      });
+      
       return {
         uid: userDoc.id,
         email: userData.email,
@@ -35,6 +46,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
       };
     }
     
+    console.log(`❌ No user found with email: "${email}"`);
     return null;
   } catch (error) {
     console.error('Error getting user by email:', error);
@@ -63,12 +75,17 @@ export const createTransaction = async (
   transactionRequest: TransactionRequest
 ): Promise<string> => {
   try {
+    console.log(`💰 Creating transaction from ${fromUserEmail} to ${transactionRequest.toUserEmail}`);
+    
     // First, find the recipient by email
     const recipientUser = await getUserByEmail(transactionRequest.toUserEmail);
     
     if (!recipientUser) {
-      throw new Error('Recipient user not found');
+      console.error(`❌ Recipient not found: ${transactionRequest.toUserEmail}`);
+      throw new Error(`Recipient user not found. Please check the email address: ${transactionRequest.toUserEmail}`);
     }
+
+    console.log(`✅ Found recipient: ${recipientUser.displayName} (${recipientUser.email})`);
 
     if (recipientUser.uid === fromUserId) {
       throw new Error('Cannot send coins to yourself');
@@ -86,6 +103,7 @@ export const createTransaction = async (
     };
 
     const transactionRef = await addDoc(collection(db, 'transactions'), transaction);
+    console.log(`✅ Transaction created with ID: ${transactionRef.id}`);
     return transactionRef.id;
   } catch (error) {
     console.error('Error creating transaction:', error);

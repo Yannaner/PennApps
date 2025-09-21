@@ -9,6 +9,7 @@ import { TransactionService } from '@/lib/transactions';
 import SendCoinsForm from '@/components/SendCoinsForm';
 import TransactionHistory from '@/components/TransactionHistory';
 import BlockchainStatus from '@/components/BlockchainStatus';
+import FirestoreDebug from '@/components/FirestoreDebug';
 
 export default function Dashboard() {
   const { user, loading, signOut, refreshUserData } = useAuth();
@@ -86,7 +87,7 @@ export default function Dashboard() {
               <button
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                className="flex items-center px-3 py-2 text-sm font-medium text-gray-800 hover:text-blue-600 transition-colors"
               >
                 <div className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`}>
                   🔄
@@ -94,13 +95,13 @@ export default function Dashboard() {
                 Refresh
               </button>
               
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-800 font-medium">
                 {user.displayName || user.email}
               </div>
               
               <button
                 onClick={handleSignOut}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-800 hover:text-red-600 transition-colors"
               >
                 Sign Out
               </button>
@@ -117,7 +118,7 @@ export default function Dashboard() {
             <div className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-4">
               {user.ecoCoins} ECO
             </div>
-            <p className="text-gray-600">
+            <p className="text-gray-800">
               Digital currency verified by physical blockchain technology
             </p>
           </div>
@@ -147,6 +148,11 @@ export default function Dashboard() {
             transactions={transactions}
             currentUserId={user.uid}
           />
+        </div>
+
+        {/* Debug Panel */}
+        <div className="mt-8">
+          <FirestoreDebug />
         </div>
       </div>
     </div>

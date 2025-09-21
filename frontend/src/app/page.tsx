@@ -40,7 +40,7 @@ export default function Home() {
               CryptoLab
             </span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-800 max-w-2xl mx-auto">
             Experience the future of digital currency with physical blockchain verification
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function Home() {
               <span className="text-green-600 text-2xl">🪙</span>
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">100 Free ECO Coins</h3>
-            <p className="text-gray-600 text-sm">Start with 100 ECO Coins instantly when you sign up</p>
+            <p className="text-gray-800 text-sm">Start with 100 ECO Coins instantly when you sign up</p>
           </div>
 
           <div className="bg-white rounded-xl p-6 shadow-md">
@@ -60,7 +60,7 @@ export default function Home() {
               <span className="text-blue-600 text-2xl">⚡</span>
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Physical Blockchain</h3>
-            <p className="text-gray-600 text-sm">Watch hardware nodes verify your transactions with lights</p>
+            <p className="text-gray-800 text-sm">Watch hardware nodes verify your transactions with lights</p>
           </div>
 
           <div className="bg-white rounded-xl p-6 shadow-md">
@@ -68,7 +68,7 @@ export default function Home() {
               <span className="text-purple-600 text-2xl">🔒</span>
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Secure Transfers</h3>
-            <p className="text-gray-600 text-sm">30-second verification ensures transaction security</p>
+            <p className="text-gray-800 text-sm">30-second verification ensures transaction security</p>
           </div>
         </div>
 

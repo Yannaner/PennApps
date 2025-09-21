@@ -2,24 +2,10 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Rules for users collection
-    match /users/{userId} {
-      // Users can read and write their own document
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    
-    // Rules for transactions collection
-    match /transactions/{transactionId} {
-      // Users can read and write transactions where they are sender or receiver
-      allow read, write: if request.auth != null && 
-        (request.auth.uid == resource.data.senderId || 
-         request.auth.uid == resource.data.receiverId ||
-         request.auth.uid == request.resource.data.senderId ||
-         request.auth.uid == request.resource.data.receiverId);
-      
-      // Allow users to create new transactions where they are the sender
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.senderId;
+    // Hackathon rules - completely open for authenticated users
+    // Allow any authenticated user to read and write any document
+    match /{document=**} {
+      allow read, write: if request.auth != null;
     }
   }
 }
